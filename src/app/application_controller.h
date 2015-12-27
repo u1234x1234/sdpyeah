@@ -15,6 +15,7 @@
 #include <QScreen>
 #include <QPixmap>
 #include <QProcess>
+#include "test.h"
 
 using namespace std;
 
@@ -43,7 +44,8 @@ public:
 
 //        qDebug() << system("ls1");
         string s = exec1("/sdcard/dbclient > /sdcard/res");
-        qDebug() << QString::fromStdString(s);
+//        qDebug() << QString::fromStdString(s);
+        qDebug() << test_func();
 //        QProcess proc;
 //        proc.setStandardOutputFile("/sdcard/res");
 //        proc.start("ls");
