@@ -3,8 +3,8 @@ TEMPLATE = app
 QT += qml quick
 CONFIG += c++11
 
-SOURCES += main.cpp \
-    application_controller.cpp
+SOURCES += src/main.cpp \
+	src/application_controller.cpp
 
 RESOURCES += qml.qrc
 
@@ -15,4 +15,4 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 HEADERS += \
-    application_controller.h
+	src/application_controller.h
