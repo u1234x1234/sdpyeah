@@ -7,7 +7,7 @@ SOURCES += main.cpp \
 	application_controller.cpp
 
 INCLUDEPATH += ../dropbear/
-LIBS += -L../dropbear/ -ldropbear
+LIBS += -L../dropbear/ -llibdropbear -llibtommath -llibtomcrypt
 
 RESOURCES += qml.qrc
 

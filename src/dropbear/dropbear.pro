@@ -1,8 +1,9 @@
+ 
+TEMPLATE = subdirs
 
-TEMPLATE = lib
+SUBDIRS += \
+	libtomcrypt.pro \
+	libtommath.pro \
+	libdropbear.pro
 
-#VPATH += dropbear
-
-SOURCES += test.cpp
-
-HEADERS += test.h
+CONFIG += ordered
