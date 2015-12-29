@@ -6,7 +6,8 @@ CONFIG += c++11 static
 
 SOURCES += main.cpp \
 	application_controller.cpp \
-    sshwrapper.cpp
+    sshwrapper.cpp \
+    commandexecutor.cpp
 
 RESOURCES += qml.qrc
 
@@ -14,7 +15,8 @@ RESOURCES += qml.qrc
 QML_IMPORT_PATH =
 
 HEADERS += application_controller.h \
-    sshwrapper.h
+    sshwrapper.h \
+    commandexecutor.h
 
 
 include(deployment.pri)

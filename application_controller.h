@@ -2,6 +2,7 @@
 #define APPLICATION_CONTROLLER_H
 
 #include "sshwrapper.h"
+#include "commandexecutor.h"
 
 #include <QObject>
 #include <QDebug>
@@ -15,7 +16,9 @@ public:
 
     Q_INVOKABLE void func(int status)
     {
-        qDebug() << sshWrapper->executeCommand("ls");
+//        qDebug() << sshWrapper->executeCommand("ls");
+        QStringList result = commandExecutor->getDirectoryContents("");
+        qDebug() << result;
     }
 
 public slots:
@@ -25,6 +28,7 @@ public slots:
 
 private:
     SshWrapper *sshWrapper;
+    CommandExecutor *commandExecutor;
 };
 
 #endif // APPLICATION_CONTROLLER_H

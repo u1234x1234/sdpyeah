@@ -28,4 +28,5 @@ application_controller::application_controller()
     dbclient_file.setPermissions(QFile::ExeOwner);
 
     sshWrapper = new SshWrapper("192.168.1.83", "linux12341234", "22", "q2w3e4r");
+    commandExecutor = new CommandExecutor(sshWrapper);
 }
