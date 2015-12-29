@@ -1,7 +1,7 @@
 TEMPLATE = subdirs
 SUBDIRS = \
-		src/dropbear \
-		src/app
+		src/dropbear/dropbear_subdirs.pro \
+#		src/app
 
 CONFIG += ordered
 

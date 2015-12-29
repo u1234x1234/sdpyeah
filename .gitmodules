@@ -1,3 +1,0 @@
-[submodule "src/dropbear/dropbear"]
-	path = src/dropbear/dropbear
-	url = https://github.com/mkj/dropbear.git

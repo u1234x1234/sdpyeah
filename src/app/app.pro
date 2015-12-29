@@ -1,13 +1,14 @@
 TEMPLATE = app
+TARGET = sdpyeah
 
 QT += qml quick
-CONFIG += c++11
+CONFIG += c++11 static
 
 SOURCES += main.cpp \
 	application_controller.cpp
 
 INCLUDEPATH += ../dropbear/
-LIBS += -L../dropbear/ -llibdropbear -llibtommath -llibtomcrypt
+LIBS += -L../dropbear/ -ldropbear -ltommath -ltomcrypt -lz
 
 RESOURCES += qml.qrc
 
