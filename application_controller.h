@@ -15,6 +15,7 @@
 #include <QScreen>
 #include <QPixmap>
 #include <QProcess>
+#include <QStandardPaths>
 
 using namespace std;
 
@@ -41,16 +42,12 @@ public:
             return result;
         };
 
-//        qDebug() << system("ls1");
-        string s = exec1("/sdcard/dbclient > /sdcard/res");
+        string s = exec1("DROPBEAR_PASSWORD=q2w3e4r /data/data/org.qtproject.example.sdpyeah/files/dbclient linux12341234@192.168.1.83 -y \'ls\'");
         qDebug() << QString::fromStdString(s);
-//        qDebug() << test_func();
-//        QProcess proc;
-//        proc.setStandardOutputFile("/sdcard/res");
-//        proc.start("ls");
-//        proc.waitForFinished();
-//        qDebug() << proc.readAll();
-//        qDebug() << status;
+//        qDebug() << QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+
+
     }
 
 public slots:
