@@ -11,6 +11,19 @@ application_controller::application_controller()
     if (!dir.exists())
         dir.mkpath(".");
 
-    qDebug() << write_path;
-    QFile::copy(":/dbclient", write_path + "/dbclient");
+    qDebug() << "constructor write path " << write_path;
+
+    QString prebuilt_path;
+#ifdef Q_OS_ANDROID
+    prebuild_path = ":/prebuilt/arm-linux-androideabi/";
+#else
+    prebuilt_path = ":/prebuilt/x86_64-linux/";
+#endif
+
+    qDebug() << "prebuilt read path " << prebuilt_path;
+
+    QFile::copy(prebuilt_path + "dbclient", write_path + "/dbclient");
+
+    QFile dbclient_file(write_path + "/dbclient");
+    dbclient_file.setPermissions(QFile::ExeOwner);
 }
