@@ -15,7 +15,7 @@ application_controller::application_controller()
 
     QString prebuilt_path;
 #ifdef Q_OS_ANDROID
-    prebuild_path = ":/prebuilt/arm-linux-androideabi/";
+    prebuilt_path = ":/prebuilt/arm-linux-androideabi/";
 #else
     prebuilt_path = ":/prebuilt/x86_64-linux/";
 #endif
@@ -26,4 +26,6 @@ application_controller::application_controller()
 
     QFile dbclient_file(write_path + "/dbclient");
     dbclient_file.setPermissions(QFile::ExeOwner);
+
+    sshWrapper = new SshWrapper("192.168.1.83", "linux12341234", "22", "q2w3e4r");
 }
