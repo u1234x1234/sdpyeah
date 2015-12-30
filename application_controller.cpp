@@ -4,7 +4,8 @@
 #include <QDir>
 #include <QStandardPaths>
 
-application_controller::application_controller()
+application_controller::application_controller(QQmlApplicationEngine *engine)
+    :engine(engine)
 {
     QString write_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     QDir dir(write_path);

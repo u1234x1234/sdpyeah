@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    application_controller ac;
+    application_controller ac(&engine);
 
     engine.rootContext()->setContextProperty("ac", &ac);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

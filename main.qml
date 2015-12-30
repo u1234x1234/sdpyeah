@@ -22,17 +22,29 @@ Window {
         MouseArea {
             id: mouseArea1
             anchors.fill: parent
-            onClicked: ac.func(5)
+            onClicked: {
+                ac.func(5)
+//                textInput1.text = "qwe"
+            }
         }
 
-        TextInput {
-            id: textInput1
-            x: 160
-            y: 40
-            width: 80
-            height: 20
+        Text {
+            id: text1
+            x: 187
+            y: 42
             text: qsTr("ls")
             font.pixelSize: 12
         }
+    }
+
+    Text {
+        id: textInput1
+        objectName: "textInput"
+        text: "qwe\nqwe"
+        x: 86
+        y: 162
+        width: 228
+        height: 143
+        font.pixelSize: 12
     }
 }
