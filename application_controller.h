@@ -18,7 +18,8 @@ public:
 
     Q_INVOKABLE void func(int status)
     {
-        QStringList result = commandExecutor->getDirectoryContents("");
+//        QStringList result = commandExecutor->getDirectoryContents("");
+        QStringList result = commandExecutor->getTop();
 //        qDebug() << result;
 
         QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");

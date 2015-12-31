@@ -10,6 +10,7 @@ class CommandExecutor
 public:
     CommandExecutor(SshWrapper *sshWrapper);
     QStringList getDirectoryContents(QString directory);
+    QStringList getTop();
 private:
     SshWrapper *sshWrapper;
 };

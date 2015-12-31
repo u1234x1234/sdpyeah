@@ -3,8 +3,8 @@ import QtQuick.Window 2.2
 
 Window {
     visible: true
-    width: 400
-    height: 400
+    width: 700
+    height: 700
 
     TextEdit {
         id: textField
