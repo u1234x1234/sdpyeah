@@ -22,12 +22,26 @@ application_controller::application_controller(QQmlApplicationEngine *engine)
 #endif
 
     qDebug() << "prebuilt read path " << prebuilt_path;
-
     QFile::copy(prebuilt_path + "dbclient", write_path + "/dbclient");
 
     QFile dbclient_file(write_path + "/dbclient");
     dbclient_file.setPermissions(QFile::ExeOwner);
 
-    sshWrapper = new SshWrapper("192.168.1.83", "linux12341234", "22", "q2w3e4r");
-    commandExecutor = new CommandExecutor(sshWrapper);
+
+    QString dbclient_location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbclient";
+    sshProcess = new QProcess();
+
+    connect(sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(mySlot()));
+    setenv("DROPBEAR_PASSWORD", "q2w3e4r", 1);
+    sshProcess->start(dbclient_location, QStringList() << "dima@192.168.1.192" << "-y");
+    sshProcess->waitForStarted();
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
+    timer->start(300);
+}
+
+application_controller::~application_controller()
+{
+    sshProcess->terminate();
 }

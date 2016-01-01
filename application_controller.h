@@ -8,6 +8,9 @@
 #include <QDebug>
 #include <QQmlContext>
 #include <QQmlApplicationEngine>
+#include <QProcess>
+#include <QTimer>
+#include <QTextCodec>
 
 class application_controller : public QObject
 {
@@ -15,30 +18,32 @@ class application_controller : public QObject
 
 public:
     explicit application_controller(QQmlApplicationEngine *engine);
+    ~application_controller();
 
     Q_INVOKABLE void func(int status)
     {
-//        QStringList result = commandExecutor->getDirectoryContents("");
-        QStringList result = commandExecutor->getTop();
-//        qDebug() << result;
-
         QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
 
-        qDebug() << textInput;
-        if (textInput) {
-            QString r;
-            for (auto it : result)
-                r += it + "\n";
-            textInput->setProperty("text", r);
-        }
+        r.clear();
+        sshProcess->write("top -bn 1\n");
     }
 
 public slots:
-    void mySlot(int status)
+    void mySlot()
     {
+        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
+        r.append(sshProcess->readAllStandardOutput());
+        qDebug() << r;
+        textInput->setProperty("text", r);
+    }
+    void updateCaption() {
     }
 
 private:
+    QString r;
+    QProcess p1, p2;
+    QProcess *sshProcess;
+    QTimer *timer;
     SshWrapper *sshWrapper;
     CommandExecutor *commandExecutor;
     QQmlApplicationEngine *engine;
