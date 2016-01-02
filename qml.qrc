@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>prebuilt/arm-linux-androideabi/dbclient</file>
         <file>prebuilt/x86_64-linux/dbclient</file>
+        <file>Hosts.qml</file>
     </qresource>
 </RCC>
