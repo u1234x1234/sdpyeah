@@ -1,10 +1,15 @@
 import QtQuick 2.0
 
 Item{
+    id: hosts
+
     Rectangle {
-        id: rectangle1
-        width: 89
-        height: 52
+        id: header
+        anchors.top: parent.top
+        z: 2
+        width: parent.width
+        height: parent.height * 0.1
+        color: "yellow"
         Text { text: "Hosts"; anchors.fill: parent; font.bold: true; }
     }
 
@@ -15,9 +20,11 @@ Item{
     }
 
     Rectangle {
-        anchors.top: rectangle1.bottom
+        id: viewRect
+        anchors.top: header.bottom
+        anchors.bottom: addHosts.top
         width: parent.width
-        height: parent.height
+        z: 1
 
         ListView {
             anchors.fill: parent
@@ -26,7 +33,7 @@ Item{
 
             delegate: Rectangle {
                 width: parent.width
-                height: 50
+                height: hosts.height * 0.2
 
                 border.color: "black"
 
@@ -42,10 +49,13 @@ Item{
     }
 
     Rectangle {
+        id: addHosts
         width: parent.width
         height: parent.height * 0.1
         color: "red"
         anchors.bottom: parent.bottom
+        z: 2
+
         Text {
             anchors.fill: parent
             text: "add new host"
