@@ -40,4 +40,22 @@ Item{
             }
         }
     }
+
+    Rectangle {
+        width: parent.width
+        height: parent.height * 0.1
+        color: "red"
+        anchors.bottom: parent.bottom
+        Text {
+            anchors.fill: parent
+            text: "add new host"
+        }
+        MouseArea {
+            anchors.fill: parent
+            onClicked: {
+                appModel.append({"name":  "host 3"})
+                print(1)
+            }
+        }
+    }
 }
