@@ -44,6 +44,19 @@ Item{
                     anchors.fill: parent
                     onClicked: parent.ListView.view.currentIndex = index
                 }
+                Rectangle {
+                    width: parent.height * 0.4
+                    height: parent.height * 0.4
+                    color: "green"
+
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.rightMargin: parent.width * 0.05
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: print(index)
+                    }
+                }
             }
         }
     }
