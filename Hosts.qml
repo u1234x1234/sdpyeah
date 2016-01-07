@@ -75,7 +75,6 @@ Item{
                         anchors.rightMargin: parent.width * 0.05
                         MouseArea {
                             anchors.fill: parent
-//                            onClicked: print(appModel.remove(index))
                             onClicked: ac.removeConnection(index)
                         }
                     }
@@ -97,8 +96,7 @@ Item{
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    appModel.append({"name":  "host 3"})
-                    print(commands.asd)
+                    ac.addConnection()
                 }
             }
         }

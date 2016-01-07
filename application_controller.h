@@ -42,11 +42,9 @@ public slots:
     void updateCaption() {
     }
     void removeConnection(int index) {
-        qDebug() << sshConnectionModel.rowCount();
         sshConnectionModel.removeRows(index);
-        qDebug() << sshConnectionModel.rowCount();
-//        engine->rootContext()->setContextProperty("appModel", &sshConnectionModel);
     }
+    void addConnection();
     void beforeQuit();
 
 private:

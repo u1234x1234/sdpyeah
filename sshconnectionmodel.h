@@ -6,7 +6,7 @@
 class SshConnection
 {
 public:
-    SshConnection(const QString &name, const QString &host);
+    SshConnection(const QString &name = "new connection", const QString &host = "name@host");
 
     QString name() const;
     QString host() const;

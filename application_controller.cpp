@@ -78,3 +78,8 @@ QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QSt
     // not found
     return NULL;
 }
+
+void application_controller::addConnection()
+{
+    sshConnectionModel.addSshConnection(SshConnection());
+}
