@@ -1,5 +1,7 @@
 #include "sshconnectionmodel.h"
 
+#include <QDebug>
+
 SshConnection::SshConnection(const QString &name, const QString &host)
     : name_(name), host_(host)
 {
@@ -51,9 +53,38 @@ QVariant SshConnectionModel::data(const QModelIndex & index, int role) const {
     return QVariant();
 }
 
+QList<SshConnection> SshConnectionModel::getConnections() const
+{
+    return connections;
+}
+
 QHash<int, QByteArray> SshConnectionModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NameRole] = "name";
     roles[HostRole] = "host";
     return roles;
+}
+
+QDataStream &operator<<(QDataStream &out, const SshConnectionModel &sshConnectionModel)
+{
+    for (auto &it : sshConnectionModel.getConnections())
+        out << it.name() << it.host();
+    return out;
+}
+
+
+QDataStream &operator>>(QDataStream &in, SshConnectionModel &sshConnectionModel)
+{
+    QString name;
+    QString host;
+
+    while(true){
+        in >> name >> host;
+        if (in.status() != in.Ok)
+            break;
+
+        sshConnectionModel.addSshConnection(SshConnection(name, host));
+    }
+
+    return in;
 }

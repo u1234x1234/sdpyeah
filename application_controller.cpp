@@ -8,12 +8,23 @@
 application_controller::application_controller(QQmlApplicationEngine *engine)
     :engine(engine)
 {
-    sshConnectionModel.addSshConnection(SshConnection("conn1", "dima@192.168.1.192"));
-    sshConnectionModel.addSshConnection(SshConnection("conn2", "dima2@192.168.1.192"));
+//    sshConnectionModel.addSshConnection(SshConnection("conn1", "dima@192.168.1.192"));
+//    sshConnectionModel.addSshConnection(SshConnection("conn2", "dima2@192.168.1.192"));
+
+    QFile configFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/config");
+    configFile.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    if(!configFile.isOpen()){
+        qDebug() << "- Error, unable to open" << configFile.fileName() << "for input";
+    }
+
+    QDataStream inStream(&configFile);
+    inStream >> sshConnectionModel;
+    configFile.close();
+
 
     QQmlContext *ctxt = engine->rootContext();
     ctxt->setContextProperty("appModel", &sshConnectionModel);
-    ctxt->setContextProperty("currentDateTime", QDateTime::currentDateTime());
 
     //    QString write_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
     //    QDir dir(write_path);
@@ -56,9 +67,18 @@ application_controller::~application_controller()
 
 void application_controller::beforeQuit()
 {
-    //    QFile configFile;
-//        auto q = FindItemByName(engine->rootObjects(), "zxc");
-    //    qDebug() << q;
+    // saving config to file
+    QFile configFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/config");
+    configFile.open(QIODevice::WriteOnly | QIODevice::Text);
+
+    if(!configFile.isOpen()){
+        qDebug() << "- Error, unable to open" << configFile.fileName() << "for output";
+    }
+
+    QDataStream outStream(&configFile);
+    outStream << sshConnectionModel;
+
+    configFile.close();
 }
 
 QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QString& name)

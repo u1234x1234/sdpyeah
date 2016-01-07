@@ -2,6 +2,7 @@
 #define SSHCONNECTIONMODEL_H
 
 #include <QAbstractListModel>
+#include <QDataStream>
 
 class SshConnection
 {
@@ -33,11 +34,15 @@ public:
     int rowCount(const QModelIndex & parent = QModelIndex()) const;
 
     QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QList<SshConnection> getConnections() const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;
 private:
     QList<SshConnection> connections;
 };
+
+QDataStream &operator<<(QDataStream &out, const SshConnectionModel &sshConnectionModel);
+QDataStream &operator>>(QDataStream &in, SshConnectionModel &sshConnectionModel);
 
 #endif // SSHCONNECTIONMODEL_H
