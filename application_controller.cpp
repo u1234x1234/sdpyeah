@@ -8,6 +8,7 @@
 application_controller::application_controller(QQmlApplicationEngine *engine)
     :engine(engine)
 {
+    // config reading
     QFile configFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/config");
     configFile.open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -23,43 +24,27 @@ application_controller::application_controller(QQmlApplicationEngine *engine)
     QQmlContext *ctxt = engine->rootContext();
     ctxt->setContextProperty("appModel", &sshConnectionModel);
 
-    //    QString write_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-    //    QDir dir(write_path);
-    //    if (!dir.exists())
-    //        dir.mkpath(".");
+    // copy dbclient to application data location
+    QString write_path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+    QDir dir(write_path);
+    if (!dir.exists())
+        dir.mkpath(".");
 
-    //    qDebug() << "constructor write path " << write_path;
+    QString prebuilt_path;
+#ifdef Q_OS_ANDROID
+    prebuilt_path = ":/prebuilt/arm-linux-androideabi/";
+#else
+    prebuilt_path = ":/prebuilt/x86_64-linux/";
+#endif
 
-    //    QString prebuilt_path;
-    //#ifdef Q_OS_ANDROID
-    //    prebuilt_path = ":/prebuilt/arm-linux-androideabi/";
-    //#else
-    //    prebuilt_path = ":/prebuilt/x86_64-linux/";
-    //#endif
-
-    //    qDebug() << "prebuilt read path " << prebuilt_path;
-    //    QFile::copy(prebuilt_path + "dbclient", write_path + "/dbclient");
-
-    //    QFile dbclient_file(write_path + "/dbclient");
-    //    dbclient_file.setPermissions(QFile::ExeOwner);
-
-
-    //    QString dbclient_location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbclient";
-    //    sshProcess = new QProcess();
-
-    //    connect(sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(mySlot()));
-    //    setenv("DROPBEAR_PASSWORD", "q2w3e4r", 1);
-    //    sshProcess->start(dbclient_location, QStringList() << "dima@192.168.1.192" << "-y");
-    //    sshProcess->waitForStarted();
-
-    //    timer = new QTimer();
-    //    connect(timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
-    //    timer->start(300);
+    QFile::copy(prebuilt_path + "dbclient", write_path + "/dbclient");
+    QFile dbclient_file(write_path + "/dbclient");
+    dbclient_file.setPermissions(QFile::ExeOwner);
 }
 
 application_controller::~application_controller()
 {
-    sshProcess->terminate();
+    sshProcess.terminate();
 }
 
 void application_controller::beforeQuit()
@@ -82,6 +67,22 @@ void application_controller::connectToHost(int index)
 {
     SshConnection connection = sshConnectionModel.getConnections().at(index);
     qDebug() << connection.name() << connection.host() << connection.password();
+
+    QString dbclient_location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbclient";
+    sshProcess.terminate();
+
+    connect(&sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(mySlot()));
+    setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
+    sshProcess.start(dbclient_location, QStringList() << connection.host() << "-y");
+    sshProcess.waitForStarted();
+    sshProcess.waitForReadyRead(2000);
+    if (sshProcess.state() != 2){
+        qDebug() << "could not connect to host" << connection.host();
+    }
+
+//    timer = new QTimer();
+//    connect(timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
+//    timer->start(300);
 }
 
 QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QString& name)
@@ -99,6 +100,11 @@ QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QSt
         }
     }
     return NULL;
+}
+
+void application_controller::removeConnection(int index)
+{
+    sshConnectionModel.removeRows(index);
 }
 
 void application_controller::addConnection()

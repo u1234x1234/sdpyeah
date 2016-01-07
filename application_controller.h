@@ -24,37 +24,33 @@ public:
 
     Q_INVOKABLE void func(int status)
     {
-        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
-
-        r.clear();
-        sshProcess->write("top -bn 1\n");
+//        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
+//        r.clear();
+//        sshProcess->write("top -bn 1\n");
     }
     static QObject* FindItemByName(QList<QObject*> nodes, const QString& name);
 
 public slots:
     void mySlot()
     {
-        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
-        r.append(sshProcess->readAllStandardOutput());
+//        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
+        r.append(sshProcess.readAllStandardOutput());
         qDebug() << r;
-        textInput->setProperty("text", r);
+//        textInput->setProperty("text", r);
     }
     void updateCaption() {
+        r.append(sshProcess.readAllStandardOutput());
+        qDebug() << r;
     }
-    void removeConnection(int index) {
-        sshConnectionModel.removeRows(index);
-    }
+    void removeConnection(int index);
     void addConnection();
     void beforeQuit();
     void connectToHost(int index);
 
 private:
     QString r;
-    QProcess p1, p2;
-    QProcess *sshProcess;
+    QProcess sshProcess;
     QTimer *timer;
-    SshWrapper *sshWrapper;
-    CommandExecutor *commandExecutor;
     QQmlApplicationEngine *engine;
     SshConnectionModel sshConnectionModel;
 };
