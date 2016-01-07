@@ -73,12 +73,13 @@ void application_controller::connectToHost(int index)
 
     connect(&sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(mySlot()));
     setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
-    sshProcess.start(dbclient_location, QStringList() << connection.host() << "-y");
+//    sshProcess.start(dbclient_location, QStringList() << connection.host() << "-y");
     sshProcess.waitForStarted();
     sshProcess.waitForReadyRead(2000);
     if (sshProcess.state() != 2){
         qDebug() << "could not connect to host" << connection.host();
     }
+    QMetaObject::invokeMethod(engine->rootObjects()[0], "swapPages");
 
 //    timer = new QTimer();
 //    connect(timer, SIGNAL(timeout()), this, SLOT(updateCaption()));

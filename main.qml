@@ -1,57 +1,7 @@
-//import QtQuick 2.3
-//import QtQuick.Window 2.2
-
-//Window {
-//    visible: true
-//    width: 700
-//    height: 700
-
-//    TextEdit {
-//        id: textField
-//        //        text:
-//    }
-
-//    Rectangle {
-//        id: rectangle1
-//        x: 0
-//        y: 0
-//        width: 400
-//        height: 99
-//        color: "#00ffff"
-
-//        MouseArea {
-//            id: mouseArea1
-//            anchors.fill: parent
-//            onClicked: {
-//                ac.func(5)
-////                textInput1.text = "qwe"
-//            }
-//        }
-
-//        Text {
-//            id: text1
-//            x: 187
-//            y: 42
-//            text: qsTr("ls")
-//            font.pixelSize: 12
-//        }
-//    }
-
-//    Text {
-//        id: textInput1
-//        objectName: "textInput"
-//        text: "qwe\nqwe"
-//        x: 86
-//        y: 162
-//        width: 228
-//        height: 143
-//        font.pixelSize: 12
-//    }
-//}
-
 import QtQuick 2.0
 import QtQml.Models 2.1
 import QtQuick.Window 2.2
+import QtQuick.Controls 1.4
 
 Window {
     visible: true
@@ -70,7 +20,33 @@ Window {
         visible: false
         enabled: false
         width: parent.width; height: parent.height
-        Text { text: "Commands"; font.bold: true; }
+        Text {
+            text: "Commands";
+            font.bold: true;
+        }
+        Rectangle {
+            height: parent.height * 0.1
+            width: parent.width
+            anchors.bottom: parent.bottom
+            color: "yellow"
+
+            Text {
+                text: "back"
+                anchors.centerIn: parent
+            }
+            MouseArea{
+                anchors.fill: parent
+                onClicked: swapPages()
+            }
+        }
+    }
+
+    function swapPages(){
+        print ("swap")
+        commands.visible = hosts.visible
+        commands.enabled = hosts.enabled
+        hosts.visible = !commands.visible
+        hosts.enabled = !commands.enabled
     }
 
 }
