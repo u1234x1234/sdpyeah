@@ -17,6 +17,11 @@ QString SshConnection::host() const
     return host_;
 }
 
+void SshConnection::setHost(QString host)
+{
+    host_ = host;
+}
+
 SshConnectionModel::SshConnectionModel(QObject *parent)
     : QAbstractListModel(parent)
 {
@@ -36,6 +41,14 @@ void SshConnectionModel::removeRows(int index)
     endRemoveRows();
 }
 
+void SshConnectionModel::setHost(int index, QString value)
+{
+    if (index < 0 || index >= connections.count())
+        return;
+
+    connections[index].setHost(value);
+}
+
 int SshConnectionModel::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
     return connections.count();
@@ -50,7 +63,30 @@ QVariant SshConnectionModel::data(const QModelIndex & index, int role) const {
         return connection.name();
     else if (role == HostRole)
         return connection.host();
+
+
     return QVariant();
+}
+
+Qt::ItemFlags SshConnectionModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::ItemIsEnabled;
+
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
+}
+
+bool SshConnectionModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    qDebug() << "setData" << index << " " << role;
+    if (index.isValid() && role == Qt::EditRole) {
+
+        qDebug() << 234;
+        emit dataChanged(index, index);
+
+        return true;
+    }
+    return false;
 }
 
 QList<SshConnection> SshConnectionModel::getConnections() const

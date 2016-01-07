@@ -12,6 +12,8 @@ public:
     QString name() const;
     QString host() const;
 
+    void setHost(QString host);
+
 private:
     QString name_;
     QString host_;
@@ -28,13 +30,19 @@ public:
 
     SshConnectionModel(QObject *parent = 0);
 
+    // interface
     void addSshConnection(const SshConnection &connection);
     void removeRows(int index);
-
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
-
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
     QList<SshConnection> getConnections() const;
+
+    // overrided functions
+    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
+public slots:
+    void setHost(int index, QString value);
 
 protected:
     QHash<int, QByteArray> roleNames() const;

@@ -8,9 +8,6 @@
 application_controller::application_controller(QQmlApplicationEngine *engine)
     :engine(engine)
 {
-//    sshConnectionModel.addSshConnection(SshConnection("conn1", "dima@192.168.1.192"));
-//    sshConnectionModel.addSshConnection(SshConnection("conn2", "dima2@192.168.1.192"));
-
     QFile configFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/config");
     configFile.open(QIODevice::ReadOnly | QIODevice::Text);
 
@@ -101,5 +98,7 @@ QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QSt
 
 void application_controller::addConnection()
 {
-    sshConnectionModel.addSshConnection(SshConnection());
+//    sshConnectionModel.addSshConnection(SshConnection());
+    qDebug() << 123;
+
 }

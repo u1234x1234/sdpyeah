@@ -60,7 +60,8 @@ Item{
 
                         TextInput {
                             anchors.fill: parent
-                            text: host
+                            text: model.host
+                            onTextChanged: appModel.setHost(index, text)
                         }
                     }
 
