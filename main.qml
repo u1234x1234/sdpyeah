@@ -59,54 +59,20 @@ Window {
     width: 320
     height: 480
 
-    ObjectModel {
-        id: itemModel
-
-        Hosts {
-            width: view.width; height: view.height
-        }
-        Rectangle {
-            width: view.width; height: view.height
-            Text { text: "Commands"; font.bold: true; }
-        }
-    }
-
-    ListView {
-        id: view
-        anchors { fill: parent; bottomMargin: 30 }
-        model: itemModel
-        preferredHighlightBegin: 0; preferredHighlightEnd: 0
-        highlightRangeMode: ListView.StrictlyEnforceRange
-        orientation: ListView.Horizontal
-        snapMode: ListView.SnapOneItem; flickDeceleration: 2000
-        cacheBuffer: 200
+    Hosts {
+        id: hosts
+        objectName: "qwe"
+        width: parent.width; height: parent.height
     }
 
     Rectangle {
-        width: root.width; height: 30
-        anchors { top: view.bottom; bottom: parent.bottom }
-        color: "gray"
-
-        Row {
-            anchors.centerIn: parent
-            spacing: 20
-
-            Repeater {
-                model: itemModel.count
-
-                Rectangle {
-                    width: 10; height: 10
-                    radius: 3
-                    color: view.currentIndex == index ? "blue" : "white"
-
-                    MouseArea {
-                        width: 20; height: 20
-                        anchors.centerIn: parent
-                        onClicked: view.currentIndex = index
-                    }
-                }
-            }
-        }
+        id: commands
+        property int asd: 123
+        visible: false
+        enabled: false
+        width: parent.width; height: parent.height
+        Text { text: "Commands"; font.bold: true; }
     }
+
 }
 

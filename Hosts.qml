@@ -102,7 +102,7 @@ Item{
                 anchors.fill: parent
                 onClicked: {
                     appModel.append({"name":  "host 3"})
-                    print(1)
+                    print(commands.asd)
                 }
             }
         }
