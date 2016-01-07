@@ -46,6 +46,7 @@ public slots:
     }
     void addConnection();
     void beforeQuit();
+    void connectToHost(int index);
 
 private:
     QString r;

@@ -95,9 +95,9 @@ Item{
                             anchors.leftMargin: 10
                             width: parent.width
                             anchors.verticalCenter: parent.verticalCenter
-//                            text: model.password
+                            text: model.password
                             echoMode: TextInput.Password
-//                            onTextChanged: appModel.setHost(index, text)
+                            onTextChanged: appModel.setPassword(index, text)
                         }
                     }
 
@@ -116,7 +116,7 @@ Item{
                         }
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: print("connect " + index)
+                            onClicked: ac.connectToHost(index)
                         }
                     }
                 }

@@ -7,16 +7,19 @@
 class SshConnection
 {
 public:
-    SshConnection(const QString &name = "new connection", const QString &host = "name@host");
+    SshConnection(const QString &name = "new connection", const QString &host = "name@host", const QString &password = "");
 
     QString name() const;
     QString host() const;
+    QString password() const;
 
     void setHost(QString host);
+    void setPassword(QString password);
 
 private:
     QString name_;
     QString host_;
+    QString password_;
 };
 
 class SshConnectionModel : public QAbstractListModel
@@ -25,7 +28,8 @@ class SshConnectionModel : public QAbstractListModel
 public:
     enum SshConnectionRoles {
         NameRole = Qt::UserRole + 1,
-        HostRole
+        HostRole,
+        PassRole
     };
 
     SshConnectionModel(QObject *parent = 0);
@@ -43,6 +47,7 @@ public:
 
 public slots:
     void setHost(int index, QString value);
+    void setPassword(int index, QString value);
 
 protected:
     QHash<int, QByteArray> roleNames() const;

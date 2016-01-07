@@ -78,6 +78,12 @@ void application_controller::beforeQuit()
     configFile.close();
 }
 
+void application_controller::connectToHost(int index)
+{
+    SshConnection connection = sshConnectionModel.getConnections().at(index);
+    qDebug() << connection.name() << connection.host() << connection.password();
+}
+
 QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QString& name)
 {
     for(int i = 0; i < nodes.size(); i++){
@@ -92,12 +98,10 @@ QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QSt
                 return item;
         }
     }
-    // not found
     return NULL;
 }
 
 void application_controller::addConnection()
 {
     sshConnectionModel.addSshConnection(SshConnection());
-//    qDebug() << 123;
 }

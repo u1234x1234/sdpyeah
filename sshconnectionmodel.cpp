@@ -2,8 +2,8 @@
 
 #include <QDebug>
 
-SshConnection::SshConnection(const QString &name, const QString &host)
-    : name_(name), host_(host)
+SshConnection::SshConnection(const QString &name, const QString &host, const QString &password)
+    : name_(name), host_(host), password_(password)
 {
 }
 
@@ -17,9 +17,19 @@ QString SshConnection::host() const
     return host_;
 }
 
+QString SshConnection::password() const
+{
+    return password_;
+}
+
 void SshConnection::setHost(QString host)
 {
     host_ = host;
+}
+
+void SshConnection::setPassword(QString password)
+{
+    password_ = password;
 }
 
 SshConnectionModel::SshConnectionModel(QObject *parent)
@@ -49,6 +59,14 @@ void SshConnectionModel::setHost(int index, QString value)
     connections[index].setHost(value);
 }
 
+void SshConnectionModel::setPassword(int index, QString value)
+{
+    if (index < 0 || index >= connections.count())
+        return;
+
+    connections[index].setPassword(value);
+}
+
 int SshConnectionModel::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
     return connections.count();
@@ -63,6 +81,8 @@ QVariant SshConnectionModel::data(const QModelIndex & index, int role) const {
         return connection.name();
     else if (role == HostRole)
         return connection.host();
+    else if (role == PassRole)
+        return connection.password();
 
 
     return QVariant();
@@ -78,10 +98,7 @@ Qt::ItemFlags SshConnectionModel::flags(const QModelIndex &index) const
 
 bool SshConnectionModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    qDebug() << "setData" << index << " " << role;
     if (index.isValid() && role == Qt::EditRole) {
-
-        qDebug() << 234;
         emit dataChanged(index, index);
 
         return true;
@@ -98,13 +115,14 @@ QHash<int, QByteArray> SshConnectionModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[NameRole] = "name";
     roles[HostRole] = "host";
+    roles[PassRole] = "password";
     return roles;
 }
 
 QDataStream &operator<<(QDataStream &out, const SshConnectionModel &sshConnectionModel)
 {
     for (auto &it : sshConnectionModel.getConnections())
-        out << it.name() << it.host();
+        out << it.name() << it.host() << it.password();
     return out;
 }
 
@@ -113,13 +131,14 @@ QDataStream &operator>>(QDataStream &in, SshConnectionModel &sshConnectionModel)
 {
     QString name;
     QString host;
+    QString password;
 
     while(true){
-        in >> name >> host;
+        in >> name >> host >> password;
         if (in.status() != in.Ok)
             break;
 
-        sshConnectionModel.addSshConnection(SshConnection(name, host));
+        sshConnectionModel.addSshConnection(SshConnection(name, host, password));
     }
 
     return in;
