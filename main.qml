@@ -61,7 +61,6 @@ Window {
 
     Hosts {
         id: hosts
-        objectName: "qwe"
         width: parent.width; height: parent.height
     }
 

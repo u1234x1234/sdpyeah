@@ -3,6 +3,7 @@
 
 #include "sshwrapper.h"
 #include "commandexecutor.h"
+#include "sshconnectionmodel.h"
 
 #include <QObject>
 #include <QDebug>
@@ -11,6 +12,7 @@
 #include <QProcess>
 #include <QTimer>
 #include <QTextCodec>
+#include <QQuickItem>
 
 class application_controller : public QObject
 {
@@ -27,6 +29,7 @@ public:
         r.clear();
         sshProcess->write("top -bn 1\n");
     }
+    static QObject* FindItemByName(QList<QObject*> nodes, const QString& name);
 
 public slots:
     void mySlot()
@@ -38,6 +41,12 @@ public slots:
     }
     void updateCaption() {
     }
+    void removeConnection(int index) {
+        qDebug() << sshConnectionModel.rowCount();
+        sshConnectionModel.removeRows(index);
+        qDebug() << sshConnectionModel.rowCount();
+//        engine->rootContext()->setContextProperty("appModel", &sshConnectionModel);
+    }
     void beforeQuit();
 
 private:
@@ -48,6 +57,7 @@ private:
     SshWrapper *sshWrapper;
     CommandExecutor *commandExecutor;
     QQmlApplicationEngine *engine;
+    SshConnectionModel sshConnectionModel;
 };
 
 #endif // APPLICATION_CONTROLLER_H

@@ -19,11 +19,6 @@ Item{
             Text { text: "Hosts"; anchors.fill: parent; font.bold: true; }
         }
 
-        ListModel {
-            id: appModel
-            ListElement { name: "host 1"; host: "hostname@192.168.1.192"; }
-        }
-
         Rectangle {
             id: viewRect
             anchors.top: header.bottom
@@ -80,7 +75,8 @@ Item{
                         anchors.rightMargin: parent.width * 0.05
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: print(appModel.remove(index))
+//                            onClicked: print(appModel.remove(index))
+                            onClicked: ac.removeConnection(index)
                         }
                     }
                 }
