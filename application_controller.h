@@ -38,6 +38,7 @@ public slots:
     }
     void updateCaption() {
     }
+    void beforeQuit();
 
 private:
     QString r;

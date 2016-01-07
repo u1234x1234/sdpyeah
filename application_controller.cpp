@@ -45,3 +45,8 @@ application_controller::~application_controller()
 {
     sshProcess->terminate();
 }
+
+void application_controller::beforeQuit()
+{
+    qDebug() << "quit";
+}
