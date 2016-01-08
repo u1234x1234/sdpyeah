@@ -174,5 +174,18 @@ Item{
                 }
             }
         }
+        Button {
+            anchors.horizontalCenter: parent.horizontalCenter
+            y: parent.height * 0.7
+            width: parent.width * 0.8
+            height: parent.height * 0.2
+            text: "Back"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: {
+                    closePopup()
+                }
+            }
+        }
     }
 }
