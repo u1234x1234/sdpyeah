@@ -24,24 +24,19 @@ public:
 
     Q_INVOKABLE void func(int status)
     {
-//        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
-//        r.clear();
-//        sshProcess->write("top -bn 1\n");
+        //        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
+        //        r.clear();
+        //        sshProcess->write("top -bn 1\n");
     }
     static QObject* FindItemByName(QList<QObject*> nodes, const QString& name);
 
 public slots:
-    void executeCommand();
-    void mySlot()
-    {
-//        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
+    void executeCommand(QString command);
+    void updateText() {
+        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
         r.append(sshProcess->readAllStandardOutput());
         qDebug() << r;
-//        textInput->setProperty("text", r);
-    }
-    void updateCaption() {
-        r.append(sshProcess->readAllStandardOutput());
-        qDebug() << r;
+        textInput->setProperty("text", r);
     }
     void removeConnection(int index);
     void addConnection();

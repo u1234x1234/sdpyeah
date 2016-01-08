@@ -39,20 +39,30 @@ Window {
                 onClicked: swapPages()
             }
         }
-        Button{
-            onClicked: ac.func(1)
+        Row {
+            Button{
+                text: "top"
+                onClicked: ac.executeCommand("top -b -n 1")
+            }
+            Button{
+                text: "nvidia-smi"
+                onClicked: ac.executeCommand("nvidia-smi")
+            }
         }
-
         Rectangle{
             color: "black"
             width: parent.width
             height: parent.height * 0.5
             anchors.bottom: footer.top
-            Text{
+            TextArea {
                 objectName: "textInput"
                 anchors.fill: parent
+                height: parent.height
                 text: "qe"
-                color: "white"
+                font.pixelSize: parent.width * 0.02
+                font.family: "Monospace"
+                textColor: "white"
+                backgroundVisible: false
             }
         }
     }

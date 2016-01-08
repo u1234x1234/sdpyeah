@@ -76,17 +76,21 @@ void application_controller::connectToHost(int index)
     setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
     sshProcess->close();
     sshProcess->terminate();
-    sshProcess->start(dbclient_location, QStringList() << connection.host() << "-y");
+    QString com = "sh -c \"" + dbclient_location + " " + connection.host() + " -y " + "\'ls\'" + "\"";
+//    sshProcess->start(dbclient_location, QStringList() << connection.host() << "-y" << "\'sh -c \"echo 1\"\'");
+    qDebug() << com;
+    sshProcess->start(com);
 
-    qDebug() << "started" << sshProcess->waitForStarted(1500);
+    qDebug() << "started" << sshProcess->waitForStarted(500);
     qDebug() << "ready read" << sshProcess->waitForReadyRead(100);
-    qDebug() << "finished" << sshProcess->waitForFinished(100);
+    bool finished = sshProcess->waitForFinished(3000);;
+    qDebug() << "finished" << finished;
 
     QString result = sshProcess->readAllStandardOutput();
 
     qDebug() << "output:" << result;
     qDebug() << "state:" << sshProcess->state();
-    if (sshProcess->state() != 2 || result.size() == 0){
+    if (!finished || result.size() == 0){
         qDebug() << "could not connect to host" << connection.host();
         QObject *hostsPage = FindItemByName(engine->rootObjects(), "hostsPage");
         QMetaObject::invokeMethod(hostsPage, "connectionError");
@@ -113,36 +117,25 @@ QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QSt
     return NULL;
 }
 
-void application_controller::executeCommand()
+void application_controller::executeCommand(QString command)
 {
     SshConnection connection = sshConnectionModel.getConnections().at(currentConnectionIndex);
-    qDebug() << connection.name() << connection.host() << connection.password();
 
     QString dbclient_location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbclient";
     sshProcess->close();
     sshProcess->terminate();
     qDebug() << dbclient_location;
 
-    connect(sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(mySlot()));
+    connect(sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(updateText()));
     setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
-
-    QString com = "sh -c \"" + dbclient_location + " dima@192.168.1.192 -y\"";
+    r.clear();
+    QString com = "sh -c \"" + dbclient_location + " " + connection.host() + " -y " + "\'" + command + "\'" + "\"";
     qDebug() << com;
     sshProcess->start(com);
 
-    sshProcess->waitForStarted(100);
-    sshProcess->waitForFinished();
-
-    qDebug() << sshProcess->state();
-    if (sshProcess->state() != 2){
-        qDebug() << "could not connect to host" << connection.host();
-        return;
-    }
-    QMetaObject::invokeMethod(engine->rootObjects()[0], "swapPages");
-
-    timer = new QTimer();
-    connect(timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
-    timer->start(300);
+//    timer = new QTimer();
+//    connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
+//    timer->start(300);
 }
 
 void application_controller::removeConnection(int index)
