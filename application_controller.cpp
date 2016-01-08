@@ -74,11 +74,13 @@ void application_controller::connectToHost(int index)
     qDebug() << dbclient_location;
 
     setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
+    sshProcess->close();
+    sshProcess->terminate();
     sshProcess->start(dbclient_location, QStringList() << connection.host() << "-y");
 
-    sshProcess->waitForStarted(100);
-    sshProcess->waitForFinished(1500);
-    sshProcess->waitForReadyRead(1500);
+    qDebug() << "started" << sshProcess->waitForStarted(1500);
+    qDebug() << "ready read" << sshProcess->waitForReadyRead(100);
+    qDebug() << "finished" << sshProcess->waitForFinished(100);
 
     QString result = sshProcess->readAllStandardOutput();
 
