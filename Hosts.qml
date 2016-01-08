@@ -2,18 +2,29 @@ import QtQuick 2.0
 import QtQuick.Controls 1.4
 
 Item{
+    objectName: "hostsPage"
+
     function openPopup() {
         hosts.opacity = 0.5
         hosts.enabled = false
         popup.opacity = 1
         popup.visible = true
     }
-    function closePopup() {
+
+    function closePopup(id) {
         hosts.opacity = 1
         hosts.enabled = true
-        popup.opacity = 0
-        popup.visible = false
+        id.opacity = 0
+        id.visible = false
     }
+
+    function connectionError() {
+        hosts.opacity = 0.5
+        hosts.enabled = false
+        popup2.opacity = 1
+        popup2.visible = true
+    }
+
     property int selected: 0
 
     Item {
@@ -170,7 +181,7 @@ Item{
                 anchors.fill: parent
                 onClicked: {
                     ac.removeConnection(listView.currentIndex)
-                    closePopup()
+                    closePopup(popup)
                 }
             }
         }
@@ -183,9 +194,32 @@ Item{
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    closePopup()
+                    closePopup(popup)
                 }
             }
+        }
+    }
+
+    Rectangle
+    {
+        id: popup2
+        color: "darkred"
+        width: parent.width * 0.7
+        height: parent.height * 0.4
+        opacity: 0
+        visible: false
+        z: 5
+        Behavior on opacity { NumberAnimation { duration: 500 } }
+
+        anchors.centerIn: parent
+        Text {
+            anchors.centerIn: parent
+            text: "Could not connect to host"
+            font.pixelSize: parent.width * 0.07
+        }
+        MouseArea{
+            anchors.fill: parent
+            onClicked: closePopup(popup2)
         }
     }
 }

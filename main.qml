@@ -16,7 +16,6 @@ Window {
 
     Rectangle {
         id: commands
-        property int asd: 123
         visible: false
         enabled: false
         width: parent.width; height: parent.height
@@ -25,6 +24,7 @@ Window {
             font.bold: true;
         }
         Rectangle {
+            id: footer
             height: parent.height * 0.1
             width: parent.width
             anchors.bottom: parent.bottom
@@ -37,6 +37,22 @@ Window {
             MouseArea{
                 anchors.fill: parent
                 onClicked: swapPages()
+            }
+        }
+        Button{
+            onClicked: ac.func(1)
+        }
+
+        Rectangle{
+            color: "black"
+            width: parent.width
+            height: parent.height * 0.5
+            anchors.bottom: footer.top
+            Text{
+                objectName: "textInput"
+                anchors.fill: parent
+                text: "qe"
+                color: "white"
             }
         }
     }

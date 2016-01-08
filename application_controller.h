@@ -31,15 +31,16 @@ public:
     static QObject* FindItemByName(QList<QObject*> nodes, const QString& name);
 
 public slots:
+    void executeCommand();
     void mySlot()
     {
 //        QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
-        r.append(sshProcess.readAllStandardOutput());
+        r.append(sshProcess->readAllStandardOutput());
         qDebug() << r;
 //        textInput->setProperty("text", r);
     }
     void updateCaption() {
-        r.append(sshProcess.readAllStandardOutput());
+        r.append(sshProcess->readAllStandardOutput());
         qDebug() << r;
     }
     void removeConnection(int index);
@@ -48,8 +49,9 @@ public slots:
     void connectToHost(int index);
 
 private:
+    int currentConnectionIndex;
     QString r;
-    QProcess sshProcess;
+    QProcess *sshProcess;
     QTimer *timer;
     QQmlApplicationEngine *engine;
     SshConnectionModel sshConnectionModel;

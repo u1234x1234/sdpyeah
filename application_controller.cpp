@@ -40,11 +40,13 @@ application_controller::application_controller(QQmlApplicationEngine *engine)
     QFile::copy(prebuilt_path + "dbclient", write_path + "/dbclient");
     QFile dbclient_file(write_path + "/dbclient");
     dbclient_file.setPermissions(QFile::ExeOwner);
+
+    sshProcess = new QProcess();
 }
 
 application_controller::~application_controller()
 {
-    sshProcess.terminate();
+    sshProcess->terminate();
 }
 
 void application_controller::beforeQuit()
@@ -69,21 +71,27 @@ void application_controller::connectToHost(int index)
     qDebug() << connection.name() << connection.host() << connection.password();
 
     QString dbclient_location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbclient";
-    sshProcess.terminate();
+    qDebug() << dbclient_location;
 
-    connect(&sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(mySlot()));
     setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
-//    sshProcess.start(dbclient_location, QStringList() << connection.host() << "-y");
-    sshProcess.waitForStarted();
-    sshProcess.waitForReadyRead(2000);
-    if (sshProcess.state() != 2){
+    sshProcess->start(dbclient_location, QStringList() << connection.host() << "-y");
+
+    sshProcess->waitForStarted(100);
+    sshProcess->waitForFinished(1500);
+    sshProcess->waitForReadyRead(1500);
+
+    QString result = sshProcess->readAllStandardOutput();
+
+    qDebug() << "output:" << result;
+    qDebug() << "state:" << sshProcess->state();
+    if (sshProcess->state() != 2 || result.size() == 0){
         qDebug() << "could not connect to host" << connection.host();
+        QObject *hostsPage = FindItemByName(engine->rootObjects(), "hostsPage");
+        QMetaObject::invokeMethod(hostsPage, "connectionError");
+        return;
     }
     QMetaObject::invokeMethod(engine->rootObjects()[0], "swapPages");
-
-//    timer = new QTimer();
-//    connect(timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
-//    timer->start(300);
+    currentConnectionIndex = index;
 }
 
 QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QString& name)
@@ -101,6 +109,38 @@ QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QSt
         }
     }
     return NULL;
+}
+
+void application_controller::executeCommand()
+{
+    SshConnection connection = sshConnectionModel.getConnections().at(currentConnectionIndex);
+    qDebug() << connection.name() << connection.host() << connection.password();
+
+    QString dbclient_location = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/dbclient";
+    sshProcess->close();
+    sshProcess->terminate();
+    qDebug() << dbclient_location;
+
+    connect(sshProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(mySlot()));
+    setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
+
+    QString com = "sh -c \"" + dbclient_location + " dima@192.168.1.192 -y\"";
+    qDebug() << com;
+    sshProcess->start(com);
+
+    sshProcess->waitForStarted(100);
+    sshProcess->waitForFinished();
+
+    qDebug() << sshProcess->state();
+    if (sshProcess->state() != 2){
+        qDebug() << "could not connect to host" << connection.host();
+        return;
+    }
+    QMetaObject::invokeMethod(engine->rootObjects()[0], "swapPages");
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateCaption()));
+    timer->start(300);
 }
 
 void application_controller::removeConnection(int index)
