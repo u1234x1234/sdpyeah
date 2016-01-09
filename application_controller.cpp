@@ -37,9 +37,10 @@ application_controller::application_controller(QQmlApplicationEngine *engine)
     prebuilt_path = ":/prebuilt/x86_64-linux/";
 #endif
 
+    QFile::remove(write_path + "/dbclient");
     QFile::copy(prebuilt_path + "dbclient", write_path + "/dbclient");
     QFile dbclient_file(write_path + "/dbclient");
-    dbclient_file.setPermissions(QFile::ExeOwner);
+    dbclient_file.setPermissions(QFile::ExeUser);
 
     sshProcess = new QProcess();
 }
