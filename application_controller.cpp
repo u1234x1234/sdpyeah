@@ -74,22 +74,20 @@ void application_controller::connectToHost(int index)
     qDebug() << dbclient_location;
 
     setenv("DROPBEAR_PASSWORD", connection.password().toStdString().c_str(), 1);
-    sshProcess->close();
-    sshProcess->terminate();
+    QProcess tmpSshProccess;
     QString com = "sh -c \"" + dbclient_location + " " + connection.host() + " -y " + "\'ls\'" + "\"";
-//    sshProcess->start(dbclient_location, QStringList() << connection.host() << "-y" << "\'sh -c \"echo 1\"\'");
     qDebug() << com;
-    sshProcess->start(com);
+    tmpSshProccess.start(com);
 
-    qDebug() << "started" << sshProcess->waitForStarted(500);
-    qDebug() << "ready read" << sshProcess->waitForReadyRead(100);
-    bool finished = sshProcess->waitForFinished(3000);;
+    qDebug() << "started" << tmpSshProccess.waitForStarted(500);
+    qDebug() << "ready read" << tmpSshProccess.waitForReadyRead(100);
+    bool finished = tmpSshProccess.waitForFinished(3000);;
     qDebug() << "finished" << finished;
 
-    QString result = sshProcess->readAllStandardOutput();
+    QString result = tmpSshProccess.readAllStandardOutput();
 
     qDebug() << "output:" << result;
-    qDebug() << "state:" << sshProcess->state();
+    qDebug() << "state:" << tmpSshProccess.state();
     if (!finished || result.size() == 0){
         qDebug() << "could not connect to host" << connection.host();
         QObject *hostsPage = FindItemByName(engine->rootObjects(), "hostsPage");
@@ -105,7 +103,6 @@ void application_controller::connectToHost(int index)
     f.setStyleHint(QFont::TypeWriter);
     f.setFamily("Monospace");
     textInput->setProperty("font",f);
-    qDebug() << f;
 }
 
 QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QString& name)
@@ -141,9 +138,17 @@ void application_controller::executeCommand(QString command)
     qDebug() << com;
     sshProcess->start(com);
 
-//    timer = new QTimer();
-//    connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
-//    timer->start(300);
+    //    timer = new QTimer();
+    //    connect(timer, SIGNAL(timeout()), this, SLOT(updateText()));
+    //    timer->start(300);
+}
+
+void application_controller::updateText()
+{
+    QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
+    r.append(sshProcess->readAllStandardOutput());
+    qDebug() << r;
+    textInput->setProperty("text", r);
 }
 
 void application_controller::removeConnection(int index)
