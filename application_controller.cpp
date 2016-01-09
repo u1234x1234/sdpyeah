@@ -98,6 +98,14 @@ void application_controller::connectToHost(int index)
     }
     QMetaObject::invokeMethod(engine->rootObjects()[0], "swapPages");
     currentConnectionIndex = index;
+
+    QObject* textInput = engine->rootObjects()[0]->findChild<QObject*>("textInput");
+    QFont f = textInput->property("font").value<QFont>();
+    f.setFixedPitch(true);
+    f.setStyleHint(QFont::TypeWriter);
+    f.setFamily("Monospace");
+    textInput->setProperty("font",f);
+    qDebug() << f;
 }
 
 QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QString& name)

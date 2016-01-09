@@ -58,9 +58,7 @@ Window {
                 objectName: "textInput"
                 anchors.fill: parent
                 height: parent.height
-                text: "qe"
                 font.pixelSize: parent.width * 0.02
-                font.family: "Monospace"
                 textColor: "white"
                 backgroundVisible: false
             }
