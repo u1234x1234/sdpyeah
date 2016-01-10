@@ -82,7 +82,7 @@ void application_controller::connectToHost(int index)
 
     qDebug() << "started" << tmpSshProccess.waitForStarted(500);
     qDebug() << "ready read" << tmpSshProccess.waitForReadyRead(100);
-    bool finished = tmpSshProccess.waitForFinished(3000);;
+    bool finished = tmpSshProccess.waitForFinished(3000);
     qDebug() << "finished" << finished;
 
     QString result = tmpSshProccess.readAllStandardOutput();

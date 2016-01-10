@@ -19,10 +19,6 @@ Window {
         visible: false
         enabled: false
         width: parent.width; height: parent.height
-        Text {
-            text: "Commands";
-            font.bold: true;
-        }
         Rectangle {
             id: footer
             height: parent.height * 0.1
@@ -40,6 +36,7 @@ Window {
             }
         }
         Row {
+            id: simpleCommands
             Button{
                 text: "top"
                 onClicked: ac.executeCommand("top -b -n 1")
@@ -49,6 +46,29 @@ Window {
                 onClicked: ac.executeCommand("nvidia-smi")
             }
         }
+        Rectangle {
+            anchors.top: simpleCommands.bottom
+            anchors.topMargin: 20
+            width: parent.width * 0.5
+            height: parent.height * 0.3
+            Button {
+                id: printButton
+                text: "print file"
+                onClicked: ac.executeCommand("cat " + printInput.text)
+            }
+            Rectangle {
+                height: printButton.height
+                width: parent.width
+                anchors.left: printButton.right
+                border.color: "black"
+                TextInput {
+                    id: printInput
+                    objectName: "printInput"
+                    text: "~/walmart/log"
+                }
+            }
+        }
+
         Rectangle{
             color: "black"
             width: parent.width
