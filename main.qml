@@ -32,7 +32,7 @@ Window {
             }
             MouseArea{
                 anchors.fill: parent
-                onClicked: swapPages()
+                onClicked: ac.backToHostsPage()
             }
         }
         Row {
@@ -62,6 +62,7 @@ Window {
                 anchors.left: printButton.right
                 border.color: "black"
                 TextInput {
+                    width: parent.width
                     id: printInput
                     objectName: "printInput"
                     text: "~/walmart/log"

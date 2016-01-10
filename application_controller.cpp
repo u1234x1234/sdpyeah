@@ -104,6 +104,45 @@ void application_controller::connectToHost(int index)
     f.setStyleHint(QFont::TypeWriter);
     f.setFamily("Monospace");
     textInput->setProperty("font",f);
+
+
+    QFile configFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + connection.host());
+    configFile.open(QIODevice::ReadOnly | QIODevice::Text);
+
+    if(!configFile.isOpen()){
+        qDebug() << "- Error, unable to open" << configFile.fileName() << "for output";
+    }
+
+    QObject *printFile = FindItemByName(engine->rootObjects(), "printInput");
+    QString fileToPrint;
+    QDataStream inStream(&configFile);
+    inStream >> fileToPrint;
+    printFile->setProperty("text", fileToPrint);
+}
+
+void application_controller::backToHostsPage()
+{
+    QMetaObject::invokeMethod(engine->rootObjects()[0], "swapPages");
+
+    //save filename in printFile field to storage
+    SshConnection connection = sshConnectionModel.getConnections().at(currentConnectionIndex);
+
+    QFile configFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/" + connection.host());
+    configFile.open(QIODevice::WriteOnly | QIODevice::Text);
+
+
+    if(!configFile.isOpen()){
+        qDebug() << "- Error, unable to open" << configFile.fileName() << "for output";
+    }
+
+    QObject *printFile = FindItemByName(engine->rootObjects(), "printInput");
+    QString fileToPrint = printFile->property("text").value<QString>();
+
+    qDebug() << configFile.fileName() << fileToPrint;
+    QDataStream outStream(&configFile);
+    outStream << fileToPrint;
+
+    configFile.close();
 }
 
 QObject* application_controller::FindItemByName(QList<QObject*> nodes, const QString& name)

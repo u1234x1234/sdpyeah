@@ -31,6 +31,7 @@ public slots:
     void addConnection();
     void beforeQuit();
     void connectToHost(int index);
+    void backToHostsPage();
 
 private:
     int currentConnectionIndex;
